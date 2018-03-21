@@ -60,7 +60,7 @@ COPY hooks/* /var/www/html/
 
 # Commit our preinstalled Drupal database for faster Behat tests.
 COPY drupal.sql.gz /var/www
-COPY settings.php /var/www
+COPY settings.php /var/www/html/sites/default/
 RUN mkdir -p /var/www/html/sites/default/files/config_yt3arM1I65-zRJQc52H_nu_xyV-c4YyQ86uwM1E3JBCvD3CXL38O8JqAxqnWWj8rHRiigYrj0w/sync \
   && chown -Rv www-data /var/www/html/sites/default/files
 

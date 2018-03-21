@@ -27,7 +27,7 @@ apachectl start
 while ! mysqladmin ping --silent -h127.0.0.1; do sleep 1; done
 
 # Restore and update a previously installed Drupal site.
-mv ../settings.php sites/default/
+# mv ../settings.php sites/default/
 vendor/bin/drush sql-create -y
 zcat ../drupal.sql.gz | vendor/bin/drush sqlc
 vendor/bin/drush updatedb -y
