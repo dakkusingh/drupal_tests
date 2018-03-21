@@ -40,8 +40,8 @@ RUN composer global require hirak/prestissimo
 # Cache currently used libraries to improve build times. We need to force
 # discarding changes as Drupal removes test code in /vendor.
 RUN cd /var/www/html \
-  && cp composer.json composer.json.original \
-  && cp composer.lock composer.lock.original \
+  # && cp composer.json composer.json.original \
+  # && cp composer.lock composer.lock.original \
   && composer require --dev \
       cweagans/composer-patches \
       behat/mink-selenium2-driver \
@@ -51,9 +51,10 @@ RUN cd /var/www/html \
       bex/behat-screenshot \
       phpmd/phpmd \
       phpmetrics/phpmetrics \
-  && mv composer.json.original composer.json \
-  && mv composer.lock.original composer.lock \
-  && COMPOSER_DISCARD_CHANGES=1 composer install
+  # && mv composer.json.original composer.json \
+  # && mv composer.lock.original composer.lock \
+  # && COMPOSER_DISCARD_CHANGES=1 composer install
+  && COMPOSER_DISCARD_CHANGES=1 composer update
 
 COPY hooks/* /var/www/html/
 
