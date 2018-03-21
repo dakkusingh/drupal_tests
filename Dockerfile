@@ -47,6 +47,7 @@ RUN cd /var/www/html \
       behat/mink-selenium2-driver \
       behat/mink-extension:v2.2 \
       drupal/coder \
+      dealerdirect/phpcodesniffer-composer-installer \
       drupal/drupal-extension:master-dev \
       bex/behat-screenshot \
       phpmd/phpmd \
