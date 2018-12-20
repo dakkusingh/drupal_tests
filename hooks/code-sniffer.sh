@@ -15,5 +15,5 @@ vendor/bin/phpmd modules/$1 html cleancode,codesize,design,unusedcode --ignore-v
 vendor/bin/phpmetrics --extensions=php,inc,module --report-html=artifacts/phpmetrics --git modules/$1
 
 # Check coding standards
-vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs.xml modules/$1
-vendor/bin/phpcs --standard=DrupalPractice --report=junit --report-junit=artifacts/phpcs/phpcs.xml modules/$1
+vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs-drupal.xml modules/$1
+vendor/bin/phpcs --standard=DrupalPractice --report=junit --report-junit=artifacts/phpcs/phpcs-drupal-practice.xml modules/$1

@@ -13,16 +13,16 @@ RUN apt-get install -y fontconfig
 
 # xdebug isn't available as a prebuilt extension in the parent image.
 RUN pecl install xdebug
-RUN docker-php-ext-install docker-php-ext-enable xdebug
+RUN docker-php-ext-enable xdebug
 
 # We use imagemagick to support behat screenshots
 RUN apt-get install -y imagemagick libmagickwand-dev
 RUN pecl install imagick
-RUN docker-php-ext-install docker-php-ext-enable imagick
+RUN docker-php-ext-enable imagick
 
 # Install composer.
-RUN wget https://raw.githubusercontent.com/composer/getcomposer.org/f3333f3bc20ab8334f7f3dada808b8dfbfc46088/web/installer -O - -q | php -- --quiet
-RUN mv composer.phar /usr/local/bin/composer
+COPY install-composer.sh /usr/local/bin/
+RUN install-composer.sh
 
 # Install Robo CI.
 RUN wget https://robo.li/robo.phar
