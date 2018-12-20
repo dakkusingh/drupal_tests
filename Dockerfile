@@ -13,16 +13,16 @@ RUN apt-get install -y fontconfig
 
 # xdebug isn't available as a prebuilt extension in the parent image.
 RUN pecl install xdebug
-RUN echo 'zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so' > /usr/local/etc/php/conf.d/xdebug.ini
+RUN docker-php-ext-install docker-php-ext-enable xdebug
 
 # We use imagemagick to support behat screenshots
 RUN apt-get install -y imagemagick libmagickwand-dev
 RUN pecl install imagick
-RUN echo 'extension=/usr/local/lib/php/extensions/no-debug-non-zts-20170718/imagick.so' > /usr/local/etc/php/conf.d/imagick.ini
+RUN docker-php-ext-install docker-php-ext-enable imagick
 
 # Install composer.
-COPY install-composer.sh /usr/local/bin/
-RUN install-composer.sh
+RUN wget https://raw.githubusercontent.com/composer/getcomposer.org/f3333f3bc20ab8334f7f3dada808b8dfbfc46088/web/installer -O - -q | php -- --quiet
+RUN mv composer.phar /usr/local/bin/composer
 
 # Install Robo CI.
 RUN wget https://robo.li/robo.phar
@@ -39,28 +39,30 @@ RUN composer global require hirak/prestissimo
 # Cache currently used libraries to improve build times. We need to force
 # discarding changes as Drupal removes test code in /vendor.
 RUN cd /var/www/html \
-  && cp composer.json composer.json.original \
-  && cp composer.lock composer.lock.original \
-  && mv vendor vendor.original \
+  # && cp composer.json composer.json.original \
+  # && cp composer.lock composer.lock.original \
+  # && mv vendor vendor.original \
   && composer require --update-with-all-dependencies --dev \
       cweagans/composer-patches \
       behat/mink-selenium2-driver:1.3.x-dev \
       behat/mink-extension:v2.2 \
       drupal/coder:8.2.* \
+      dealerdirect/phpcodesniffer-composer-installer \
       drupal/drupal-extension:master-dev \
       bex/behat-screenshot \
       phpmd/phpmd \
       phpmetrics/phpmetrics \
-  && rm -rf vendor \
-  && mv composer.json.original composer.json \
-  && mv composer.lock.original composer.lock \
-  && mv vendor.original vendor
+  # && rm -rf vendor \
+  # && mv composer.json.original composer.json \
+  # && mv composer.lock.original composer.lock \
+  # && mv vendor.original vendor
+  && COMPOSER_DISCARD_CHANGES=1 composer update
 
 COPY hooks/* /var/www/html/
 
 # Commit our preinstalled Drupal database for faster Behat tests.
 COPY drupal.sql.gz /var/www
-COPY settings.php /var/www
+COPY settings.php /var/www/html/sites/default/
 RUN mkdir -p /var/www/html/sites/default/files/config_yt3arM1I65-zRJQc52H_nu_xyV-c4YyQ86uwM1E3JBCvD3CXL38O8JqAxqnWWj8rHRiigYrj0w/sync \
   && chown -Rv www-data /var/www/html/sites/default/files
 
